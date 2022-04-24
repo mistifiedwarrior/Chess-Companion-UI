@@ -4,12 +4,18 @@ import SelectOption from './SelectOption'
 import {LoadingButton} from '@mui/lab'
 import API from '../../API'
 import {handleLogin} from '../../utils/storage'
+import {useDispatch} from 'react-redux'
+import {setGame} from '../game/action'
+import {useRouter} from 'next/router'
+import {setUser} from '../user/action'
 
 const typeOptions = [{name: 'HOST', value: 'HOST'}, {name: 'JOIN', value: 'JOIN'}]
 
 const JoinGame = ({changeType}) => {
   const [values, setValues] = useState({type: 'JOIN', name: '', roomNo: ''})
   const [loading, setLoading] = useState(false)
+  const dispatch = useDispatch()
+  const router = useRouter()
   
   const handleChange = (key) => (event, value = '') => setValues({...values, [key]: value || event.target.value})
   
@@ -23,8 +29,11 @@ const JoinGame = ({changeType}) => {
     event.preventDefault()
     setLoading(true)
     API.games.initGame(values)
-      .then(({game, token}) => {
+      .then(({game, token, player}) => {
+        dispatch(setUser(player))
+        dispatch(setGame(game))
         handleLogin(token)
+        return router.push('/waiting')
       })
       .catch(() => ({}))
       .finally(() => setLoading(false))

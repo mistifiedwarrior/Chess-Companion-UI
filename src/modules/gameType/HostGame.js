@@ -3,6 +3,11 @@ import {useEffect, useState} from 'react'
 import SelectOption from './SelectOption'
 import {LoadingButton} from '@mui/lab'
 import API from '../../API'
+import {setGame} from '../game/action'
+import {handleLogin} from '../../utils/storage'
+import {useDispatch} from 'react-redux'
+import {useRouter} from 'next/router'
+import {setUser} from '../user/action'
 
 const typeOptions = [{name: 'HOST', value: 'HOST'}, {name: 'JOIN', value: 'JOIN'}]
 const colorOptions = [{name: 'WHITE', value: 'WHITE'}, {name: 'BLACK', value: 'BLACK'}]
@@ -10,6 +15,8 @@ const colorOptions = [{name: 'WHITE', value: 'WHITE'}, {name: 'BLACK', value: 'B
 const HostGame = ({changeType}) => {
   const [values, setValues] = useState({type: 'HOST', name: '', color: 'WHITE'})
   const [loading, setLoading] = useState(false)
+  const dispatch = useDispatch()
+  const router = useRouter()
   
   const handleChange = (key) => (event, value = '') => setValues({...values, [key]: value || event.target.value})
   
@@ -23,8 +30,13 @@ const HostGame = ({changeType}) => {
     event.preventDefault()
     setLoading(true)
     API.games.initGame(values)
-      // .then(() => ())
-      // .catch(() => ())
+      .then(({game, token, player}) => {
+        dispatch(setGame(game))
+        dispatch(setUser(player))
+        handleLogin(token)
+        return router.push('/waiting')
+      })
+      .catch(() => ({}))
       .finally(() => setLoading(false))
   }
   
