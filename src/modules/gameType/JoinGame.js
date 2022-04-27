@@ -7,7 +7,7 @@ import {handleLogin} from '../../utils/storage'
 import {useDispatch} from 'react-redux'
 import {setGame} from '../game/action'
 import {useRouter} from 'next/router'
-import {setUser} from '../user/action'
+import {setUser} from '../players/action'
 
 const typeOptions = [{name: 'HOST', value: 'HOST'}, {name: 'JOIN', value: 'JOIN'}]
 

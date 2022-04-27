@@ -1,12 +1,12 @@
 import {combineReducers} from 'redux'
 import siteReducer from '../modules/site/reducer'
 import gameReducer from '../modules/game/reducer'
-import userReducer from '../modules/user/reducer'
+import playersReducer from '../modules/players/reducer'
 
 const reducer = combineReducers({
   site: siteReducer,
   game: gameReducer,
-  user: userReducer
+  players: playersReducer
 })
 
 export default reducer

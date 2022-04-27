@@ -41,6 +41,6 @@ const removeFromStorage = (key) => {
   window[storageLocation()].removeItem(key)
 }
 
-const handleLogin = (value) => setStorage(StorageKeys.AUTH, value)
+const handleLogin = (token) => setStorage(StorageKeys.AUTH, token)
 
 export {handleLogin, setStorage, getStorage, clearStorage, removeFromStorage}

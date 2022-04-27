@@ -7,7 +7,7 @@ import {setGame} from '../game/action'
 import {handleLogin} from '../../utils/storage'
 import {useDispatch} from 'react-redux'
 import {useRouter} from 'next/router'
-import {setUser} from '../user/action'
+import {setUser} from '../players/action'
 
 const typeOptions = [{name: 'HOST', value: 'HOST'}, {name: 'JOIN', value: 'JOIN'}]
 const colorOptions = [{name: 'WHITE', value: 'WHITE'}, {name: 'BLACK', value: 'BLACK'}]

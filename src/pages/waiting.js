@@ -4,8 +4,10 @@ import {useDispatch, useSelector} from 'react-redux'
 import {styled} from '@mui/styles'
 import {useRouter} from 'next/router'
 import {LoadingButton} from '@mui/lab'
-import API from '../API'
+import useWebsocket from '../hooks/useWebsocket'
+import {START, STATUS} from '../constants/eventNames'
 import {setGame} from '../modules/game/action'
+import {setOpponent} from '../modules/players/action'
 
 const Container = styled('div')(({theme}) => ({
   display: 'flex',
@@ -20,11 +22,14 @@ const Container = styled('div')(({theme}) => ({
   borderRadius: theme.spacing(1)
 }))
 
+
+// eslint-disable-next-line max-lines-per-function,max-statements
 const Waiting = () => {
-  const {site, game, user} = useSelector((state) => state)
+  const {site, game, players} = useSelector((state) => state)
   const router = useRouter()
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
+  const ws = useWebsocket()
   
   useEffect(() => {
     if (!game || !game.gameId) {
@@ -33,28 +38,24 @@ const Waiting = () => {
   }, [game])
   
   useEffect(() => {
-    const getStatus = (retry = 3) => {
-      if (game.gameId) {
-        API.games.getStatus(game.gameId)
-          .then(({game: gameStatus}) => {
-            if (gameStatus.state === 'STARTED') {
-              return router.push('/game')
-            }
-            setTimeout(getStatus, 5000)
-            return dispatch(setGame(gameStatus))
-          })
-          .catch(() => retry > 0 && setTimeout(getStatus, 5000, retry - 1))
+    if (ws.data && ws.data.event) {
+      if (ws.data.event === STATUS) {
+        const {game: gameStatus, player1, player2} = ws.data.message
+        dispatch(setGame(gameStatus))
+        dispatch(setOpponent(player1.playerId === players.user.playerId ? player2 : player1))
+      }
+      if (ws.data.event === START) {
+        router.push('/game')
       }
     }
-    getStatus()
-  }, [game.gameId])
+  }, [ws.data])
   
   const handleStart = () => {
-    setLoading(true)
-    API.games.startGame(game.gameId)
-      .then(() => ({}))
-      .catch(() => ({}))
-      .finally(() => setLoading(false))
+    if (players.user.playerId === game.player1) {
+      setLoading(true)
+      ws.send({event: START})
+      setTimeout(setLoading, 2000, false)
+    }
   }
   
   if (!game || !game.gameId) {
@@ -65,11 +66,12 @@ const Waiting = () => {
     <Container>
       <Typography variant={'h4'}>{site.title}</Typography>
       <Typography variant={'h5'}>Room No.: {game.gameId}</Typography>
-      <Typography variant={'body1'}>{game.player1.name} ({game.player1.color})</Typography>
-      {game.player2 && <Typography variant={'body1'}>{game.player2.name} ({game.player2.color})</Typography>}
+      {players.user && <Typography variant={'body1'}>{players.user.name} ({players.user.color})</Typography>}
+      {players.opponent &&
+        <Typography variant={'body1'}>{players.opponent.name} ({players.opponent.color})</Typography>}
       <LoadingButton loading={loading} variant={'contained'} onClick={handleStart}
-                     disabled={!game.player2 || user.playerId !== game.player1.playerId}>
-        {user.playerId === game.player1.playerId ? 'START GAME' : 'WAITING FOR HOST TO START GAME'}
+                     disabled={!game.player2 || players.user.playerId !== game.player1}>
+        {players.user.playerId === game.player1 ? 'START GAME' : 'WAITING FOR HOST TO START GAME'}
       </LoadingButton>
     </Container>
   </Stack>

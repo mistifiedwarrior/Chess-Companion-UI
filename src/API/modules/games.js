@@ -6,8 +6,8 @@ const games = (host = '') => ({
     const options = {method: METHODS.POST, data: game}
     return axios.fetch(`${host}/init-game`, options)
   },
-  getStatus(gameId) {
-    return axios.fetch(`${host}/${gameId}/status`)
+  getStatus() {
+    return axios.fetch(`${host}/status`)
   },
   startGame(gameId) {
     return axios.fetch(`${host}/${gameId}/start`)
