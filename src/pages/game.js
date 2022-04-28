@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react'
 import {Stack} from '@mui/material'
 import {useDispatch, useSelector} from 'react-redux'
-import {styled} from '@mui/styles'
 import useWebsocket from '../hooks/useWebsocket'
 import {STATUS} from '../constants/eventNames'
 import {setGame} from '../modules/game/action'
@@ -10,23 +9,9 @@ import Header from '../common/components/Header'
 import GameScreen from '../modules/game/GameScreen'
 import API from '../API'
 
-const Container = styled('div')(({theme}) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignContent: 'center',
-  alignSelf: 'center',
-  boxShadow: theme.shadows[4],
-  border: `1px solid ${theme.palette.grey[300]}`,
-  width: theme.spacing(60),
-  padding: theme.spacing(4),
-  borderRadius: theme.spacing(1)
-}))
-
-
 // eslint-disable-next-line max-lines-per-function,max-statements
 const Game = () => {
-  const {game, players} = useSelector((state) => state)
+  const {game} = useSelector((state) => state)
   const dispatch = useDispatch()
   const ws = useWebsocket()
   

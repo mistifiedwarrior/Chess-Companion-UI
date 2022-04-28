@@ -2,7 +2,7 @@ import {Box, Stack} from '@mui/material'
 import {styled} from '@mui/styles'
 import {isWindow} from '../../../utils/utils'
 import {useDispatch, useSelector} from 'react-redux'
-import {setBoard, setGame} from '../action'
+import {setGame} from '../action'
 import {Moves} from '../utils'
 import API from '../../../API'
 import images from '../../../images'
@@ -29,23 +29,14 @@ const GameBoard = ({ws, prev, resetPrev}) => {
       ws.send({from: selected.position, to: position})
     }
     resetPrev()
-    dispatch(setBoard(moves.board))
-  }
-  
-  const isClickable = (item) => {
-    // const selected = moves.getSelected()
-    // if (selected && selected.position === item.position) {
-    //   return false
-    // }
-    return true //item.clickable || item.possible || item.replaceable
+    // dispatch(setBoard(moves.board))
   }
   
   return <Stack border={1}>
     {
       board.map((row, rowNo) => <Stack key={rowNo} direction={'row'}>
         {row.map((item, colNo) => <ChessBox onClick={handleClick(item)} isEven={(rowNo + colNo) % 2 === 0}
-                                            key={`${rowNo}_${colNo}`}
-                                            sx={{pointerEvents: isClickable(item) ? 'default' : 'none'}}>
+                                            key={`${rowNo}_${colNo}`}>
           {item && <Image src={images[`${item.color}${item.type}`.toUpperCase()]} item={item} prev={prev}/>}
         </ChessBox>)}
       </Stack>)
