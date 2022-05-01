@@ -31,12 +31,11 @@ const HostGame = ({changeType}) => {
     setLoading(true)
     API.games.initGame(values)
       .then(({game, token, player}) => {
-        dispatch(setGame(game))
         dispatch(setUser(player))
+        dispatch(setGame(game, player.color))
         handleLogin(token)
         return router.push('/waiting')
       })
-      .catch(() => ({}))
       .finally(() => setLoading(false))
   }
   

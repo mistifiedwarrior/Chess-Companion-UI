@@ -9,11 +9,8 @@ const games = (host = '') => ({
   getStatus() {
     return axios.fetch(`${host}/status`)
   },
-  startGame(gameId) {
-    return axios.fetch(`${host}/${gameId}/start`)
-  },
-  getPossibleMoves(gameId, position) {
-    return axios.fetch(`${host}/${gameId}/possibles/${position}`)
+  getPossibleMoves(position) {
+    return axios.fetch(`${host}/possibles/${position}`)
   }
 })
 

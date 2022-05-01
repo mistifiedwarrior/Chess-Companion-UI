@@ -31,7 +31,7 @@ const JoinGame = ({changeType}) => {
     API.games.initGame(values)
       .then(({game, token, player}) => {
         dispatch(setUser(player))
-        dispatch(setGame(game))
+        dispatch(setGame(game, player.color))
         handleLogin(token)
         return router.push('/waiting')
       })

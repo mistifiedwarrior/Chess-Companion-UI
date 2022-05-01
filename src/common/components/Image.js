@@ -2,8 +2,9 @@ import React from 'react'
 import {styled} from '@mui/styles'
 import {Box, Stack} from '@mui/material'
 import {isWindow} from '../../utils/utils'
+import {RemoveCircleOutline} from '@mui/icons-material'
 
-const ChessImage = styled('img')(({ theme, state }) => {
+const ChessImage = styled('img')(({theme, state}) => {
   if (!isWindow()) {
     return {}
   }
@@ -16,36 +17,39 @@ const ChessImage = styled('img')(({ theme, state }) => {
   }
 })
 
-const Dot = styled(Box)(({ theme, color }) => ({
-  border: `${(isWindow() && window.innerWidth < window.innerHeight) ? '1.2vw' : '1.2vh'} solid ${color}`,
+const Dot = styled(Box)(({color}) => ({
+  border: `${isWindow() && window.innerWidth < window.innerHeight ? '1.2vw' : '1.2vh'} solid ${color}`,
   borderRadius: '50%'
 }))
 
 const state = {
-  POSSIBLE: { color: 'warning' },
-  SELECTED: { color: 'success' },
-  CHECK: { color: 'error' },
-  getState(item, prev) {
-    if ((item.possible && item.piece && item.piece[1] === 'K') || item.check) {
-      return this.CHECK
-    }
-    if (item.selected || item.position === prev) {
+  POSSIBLE: {color: 'warning'},
+  SELECTED: {color: 'success'},
+  CHECK: {color: 'error'},
+  getState({selected, possibleMoves, prev}, {square, type}) {
+    if (square === selected || prev.to === square) {
       return this.SELECTED
     }
-    if (item.possible) {
+    if (possibleMoves.some((move) => move.includes(square)) && type.toLowerCase() === 'k') {
+      return this.CHECK
+    }
+    if (possibleMoves.some((move) => move.includes(square))) {
       return this.POSSIBLE
     }
     return {}
   }
+  
 }
 
-const Image = ({ src, alt, item, prev, ...rest }) => {
+const Image = ({src, alt, item, prev, ...rest}) => {
+  const {selected, possibleMoves} = item
   return <Stack direction={'row'} justifyContent={'center'} height={'inherit'} alignItems={'center'}>
-    {/* {(!src && item.possible) && <Dot color={'green'} />} */}
+    {!src && possibleMoves.some((move) => move.includes(item.square)) && <Dot color={'green'}/>}
     {/* {(!src && item.replaceable) && <Dot color={'blue'} />} */}
-    {/* {(!src && item.position === prev.from) && */}
-    {/* <RemoveCircleOutline fontSize={'large'} color={'error'} fontWeight={'bold'} />} */}
-    {src && <ChessImage src={src} alt={alt} state={state.getState(item, prev.to)} {...rest} />}
+    
+    {!src && item.square === prev.from &&
+      <RemoveCircleOutline fontSize={'large'} color={'error'} fontWeight={'bold'}/>}
+    {src && <ChessImage src={src} alt={alt} state={state.getState({selected, possibleMoves, prev}, item)} {...rest} />}
   </Stack>
 }
 

@@ -11,7 +11,7 @@ import API from '../API'
 
 // eslint-disable-next-line max-lines-per-function,max-statements
 const Game = () => {
-  const {game} = useSelector((state) => state)
+  const {game, players} = useSelector((state) => state)
   const dispatch = useDispatch()
   const ws = useWebsocket()
   
@@ -19,7 +19,7 @@ const Game = () => {
     API.games.getStatus()
       .then(({game: gameStatus, player1, player2, user}) => {
         dispatch(setUser(user))
-        dispatch(setGame(gameStatus))
+        dispatch(setGame(gameStatus, players.user && players.user.color))
         dispatch(setOpponent(user.playerId === player1.playerId ? player2 : player1))
       })
   }, [])
@@ -28,7 +28,7 @@ const Game = () => {
     if (ws.data && ws.data.event) {
       if (ws.data.event === STATUS) {
         const {game: gameStatus} = ws.data.message
-        dispatch(setGame(gameStatus))
+        dispatch(setGame(gameStatus, players.user && players.user.color))
       }
     }
   }, [ws.data])

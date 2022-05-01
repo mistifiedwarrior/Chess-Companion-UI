@@ -8,7 +8,7 @@ const HeadTag = () => {
     <Stack direction={'row'} spacing={1} ml={2}>
       <Typography variant={'h4'}>{site.title}</Typography>
       <Typography variant={'h4'}>|</Typography>
-      <Typography variant={'h4'}>{players.user.name}</Typography>
+      {players.user && <Typography variant={'h4'}>{players.user.name}</Typography>}
     </Stack>
   </Stack>
 }
