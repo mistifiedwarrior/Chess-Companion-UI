@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react'
 import {Stack, Typography} from '@mui/material'
 import {useDispatch, useSelector} from 'react-redux'
 import {styled} from '@mui/styles'
-import {useRouter} from 'next/router'
 import {LoadingButton} from '@mui/lab'
 import useWebsocket from '../hooks/useWebsocket'
 import {START, STATUS} from '../constants/eventNames'
@@ -26,14 +25,13 @@ const Container = styled('div')(({theme}) => ({
 // eslint-disable-next-line max-lines-per-function,max-statements
 const Waiting = () => {
   const {site, game, players} = useSelector((state) => state)
-  const router = useRouter()
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
   const ws = useWebsocket()
   
   useEffect(() => {
-    if (!game || !game.gameId) {
-      router.push('/').then()
+    if (!game || !game.gameId && window) {
+      window.location.href = '/'
     }
   }, [game])
   
@@ -45,7 +43,7 @@ const Waiting = () => {
         dispatch(setOpponent(player1.playerId === players.user.playerId ? player2 : player1))
       }
       if (ws.data.event === START) {
-        router.push('/game')
+        window.location.href = '/game'
       }
     }
   }, [ws.data])
@@ -57,7 +55,7 @@ const Waiting = () => {
       setTimeout(setLoading, 2000, false)
     }
   }
-  if (!game || !game.gameId || router.isFallback) {
+  if (!game || !game.gameId || !typeof window) {
     return <></>
   }
   
