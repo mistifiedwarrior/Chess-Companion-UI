@@ -57,8 +57,7 @@ const Waiting = () => {
       setTimeout(setLoading, 2000, false)
     }
   }
-  
-  if (!game || !game.gameId) {
+  if (!game || !game.gameId || router.isFallback) {
     return <></>
   }
   
