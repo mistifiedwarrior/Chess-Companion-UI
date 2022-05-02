@@ -8,6 +8,7 @@ import Board from './Board'
 import API from '../../../API'
 import {MOVE} from '../../../constants/eventNames'
 import {setGame} from '../action'
+import EndScreen from './EndScreen'
 
 // eslint-disable-next-line max-statements
 const GameBoard = () => {
@@ -50,13 +51,14 @@ const GameBoard = () => {
       <RowLabels reverse={reverse}/>
       <Stack spacing={0.5}>
         <ColLabels reverse={reverse}/>
-        <Board reverse={reverse} board={board} currentTurn={currentTurn} prev={prev}
-               selected={selected} possibleMoves={possibleMoves} handleClick={handleClick}/>
+        <Board reverse={reverse} board={board} currentTurn={currentTurn} prev={prev} check={game.state === 'CHECK'}
+               turn={turn} selected={selected} possibleMoves={possibleMoves} handleClick={handleClick}/>
         <ColLabels reverse={reverse}/>
       </Stack>
       <RowLabels reverse={reverse}/>
     </Stack>
     {players.user && <PlayerLabel player={players.user} turn={game.turn}/>}
+    <EndScreen game={game} players={players} currentTurn={currentTurn}/>
   </Stack>
 }
 
