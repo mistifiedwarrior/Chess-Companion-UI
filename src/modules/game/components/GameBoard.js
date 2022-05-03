@@ -5,7 +5,7 @@ import {useSelector} from 'react-redux'
 import Board from './Board'
 import EndScreen from './EndScreen'
 
-const GameBoard = () => {
+const GameBoard = ({ws}) => {
   const {players, game} = useSelector((state) => state)
   const reverse = players.user && players.user.color === 'BLACK'
   
@@ -16,7 +16,7 @@ const GameBoard = () => {
       <RowLabels reverse={reverse}/>
       <Stack spacing={0.5}>
         <ColLabels reverse={reverse}/>
-        <Board/>
+        <Board ws={ws}/>
         <ColLabels reverse={reverse}/>
       </Stack>
       <RowLabels reverse={reverse}/>

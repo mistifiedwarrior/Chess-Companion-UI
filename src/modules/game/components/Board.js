@@ -9,7 +9,6 @@ import {useEffect, useState} from 'react'
 import {MOVE} from '../../../constants/eventNames'
 import {setGame} from '../action'
 import API from '../../../API'
-import useWebSocket from '../../../hooks/useWebsocket'
 import {isCurrentTurn, isMyPiece} from '../utils'
 
 const BoxContainer = styled(Box)(({theme, isEven}) => ({
@@ -19,15 +18,14 @@ const BoxContainer = styled(Box)(({theme, isEven}) => ({
 }))
 
 // eslint-disable-next-line max-lines-per-function,max-statements
-const Board = () => {
+const Board = ({ws}) => {
   const [selected, setSelected] = useState(null)
   const [possibleMoves, setPossibleMoves] = useState([])
   const [selectedSquare, setSelectedSquare] = useState(null)
   const [prev, setPrev] = useState({})
   const {players, game} = useSelector((state) => state)
-  const {board, turn, gameState} = game
+  const {board, turn, state} = game
   const dispatch = useDispatch()
-  const ws = useWebSocket()
   
   useEffect(() => {
     if (ws.data && ws.data.event && ws.data.event === MOVE) {
@@ -58,14 +56,14 @@ const Board = () => {
     {
       board.map((row, rowNo) => <Stack key={rowNo} direction={'row'}>
         {row.map((item, colNo) => {
-          const isClickable = isCurrentTurn(players.user, turn, item) || possibleMoves.some((move) => move.to === item.square)
+          const isClickable = isCurrentTurn(turn, item, players.user) || possibleMoves.some((move) => move.to === item.square)
           return <BoxContainer key={`${rowNo}_${colNo}`} onClick={handleClick(item)} isEven={(rowNo + colNo) % 2 === 0}
                                sx={{
                                  pointerEvents: isClickable ? 'pointer' : 'none',
                                  cursor: isClickable ? 'pointer' : 'none'
                                }}>
             <Image src={item ? images[`${item.color}${item.type}`.toUpperCase()] : null} prev={prev}
-                   item={{...item, possibleMoves, selected, check: gameState === 'CHECK' && turn === item.color}}/>
+                   item={{...item, possibleMoves, selected, check: state === 'CHECK' && turn === item.color}}/>
           </BoxContainer>
         })}
       </Stack>)

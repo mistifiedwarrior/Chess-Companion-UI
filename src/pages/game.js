@@ -40,7 +40,7 @@ const Game = () => {
   
   return <Stack height={'100vh'}>
     <Header/>
-    <GameScreen/>
+    <GameScreen ws={ws}/>
   </Stack>
 }
 
