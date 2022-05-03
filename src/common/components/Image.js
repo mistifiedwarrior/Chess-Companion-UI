@@ -33,10 +33,10 @@ const state = {
     if (square === selected || prev.to === square) {
       return this.SELECTED
     }
-    if (possibleMoves.some((move) => move.includes(square)) && type === 'k') {
+    if (possibleMoves.some((move) => move.to === square) && type === 'k') {
       return this.CHECK
     }
-    if (possibleMoves.some((move) => move.includes(square))) {
+    if (possibleMoves.some((move) => move.to === square)) {
       return this.POSSIBLE
     }
     return {}
@@ -47,7 +47,7 @@ const state = {
 const Image = ({src, alt, item, prev, ...rest}) => {
   const {selected, possibleMoves} = item
   return <Stack direction={'row'} justifyContent={'center'} height={'inherit'} alignItems={'center'}>
-    {!src && possibleMoves.some((move) => move.includes(item.square)) && <Dot color={'green'}/>}
+    {!src && possibleMoves.some((move) => move.to === item.square) && <Dot color={'green'}/>}
     {!src && item.square === prev.from &&
       <RemoveCircleOutline fontSize={'large'} color={'error'} fontWeight={'bold'}/>}
     {src && <ChessImage src={src} alt={alt} state={state.getState({selected, possibleMoves, prev}, item)} {...rest} />}

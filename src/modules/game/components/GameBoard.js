@@ -9,11 +9,13 @@ import API from '../../../API'
 import {MOVE} from '../../../constants/eventNames'
 import {setGame} from '../action'
 import EndScreen from './EndScreen'
+import PawnPromotion from './PawnPromotion'
 
-// eslint-disable-next-line max-statements
+// eslint-disable-next-line max-statements,max-lines-per-function
 const GameBoard = () => {
   const [selected, setSelected] = useState(null)
   const [possibleMoves, setPossibleMoves] = useState([])
+  const [selectedSquare, setSelectedSquare] = useState(null)
   const [prev, setPrev] = useState({})
   const {players, game} = useSelector((state) => state)
   const {board, turn} = useSelector((state) => state.game)
@@ -31,15 +33,21 @@ const GameBoard = () => {
     }
   }, [ws.data])
   
-  const isMyPiece = (position) => players.user.color.toLowerCase().startsWith(position.color)
+  const isMyPiece = (position) => players.user && players.user.color.toLowerCase().startsWith(position.color)
   
-  const handleClick = (position) => () => {
+  const handleClick = (position) => (event, promotion) => {
     if (selected === null || isMyPiece(position)) {
       setSelected(position.square)
       API.games.getPossibleMoves(position.square)
         .then((moves) => setPossibleMoves(moves))
     } else {
-      ws.send({event: MOVE, from: selected, to: position.square})
+      const selectedMove = possibleMoves.find((move) => move.to === position.square)
+      if (selectedMove && !selectedMove.promotion || selectedSquare || promotion) {
+        ws.send({event: MOVE, ...selectedMove, ...promotion || {}})
+        setSelectedSquare(null)
+      } else {
+        setSelectedSquare(position.square)
+      }
     }
     setPrev({})
   }
@@ -51,13 +59,16 @@ const GameBoard = () => {
       <RowLabels reverse={reverse}/>
       <Stack spacing={0.5}>
         <ColLabels reverse={reverse}/>
-        <Board reverse={reverse} board={board} currentTurn={currentTurn} prev={prev} check={game.state === 'CHECK'}
+        <Board board={board} currentTurn={currentTurn} prev={prev} check={game.state === 'CHECK'}
                turn={turn} selected={selected} possibleMoves={possibleMoves} handleClick={handleClick}/>
         <ColLabels reverse={reverse}/>
       </Stack>
       <RowLabels reverse={reverse}/>
     </Stack>
     {players.user && <PlayerLabel player={players.user} turn={game.turn}/>}
+    <PawnPromotion possibleMoves={possibleMoves.filter((move) => move.to === selectedSquare)}
+                   clearSelectedSquare={() => setSelectedSquare(null)}
+                   handleClick={handleClick(selected || {})} turn={turn}/>
     <EndScreen game={game} players={players} currentTurn={currentTurn}/>
   </Stack>
 }

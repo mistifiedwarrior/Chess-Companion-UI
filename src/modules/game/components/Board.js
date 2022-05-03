@@ -14,7 +14,7 @@ const Board = ({board, currentTurn, handleClick, possibleMoves, selected, prev, 
   {
     board.map((row, rowNo) => <Stack key={rowNo} direction={'row'}>
       {row.map((item, colNo) => {
-        const isClickable = Boolean(currentTurn && item.type) || possibleMoves.some((move) => move.includes(item.square))
+        const isClickable = Boolean(currentTurn && item.color === turn) || possibleMoves.some((move) => move.to === item.square)
         return <BoxContainer key={`${rowNo}_${colNo}`} onClick={handleClick(item)} isEven={(rowNo + colNo) % 2 === 0}
                              sx={{
                                pointerEvents: isClickable ? 'pointer' : 'none',
