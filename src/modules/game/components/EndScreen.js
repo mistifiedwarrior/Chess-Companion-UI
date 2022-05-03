@@ -1,6 +1,6 @@
-// eslint-disable-next-line max-statements
 import {Box, Modal, Typography} from '@mui/material'
 import {styled} from '@mui/styles'
+import {useSelector} from 'react-redux'
 
 const BoxContainer = styled(Box)(({theme}) => ({
   position: 'absolute',
@@ -15,7 +15,7 @@ const BoxContainer = styled(Box)(({theme}) => ({
   padding: theme.spacing(2)
 }))
 
-const getState = (state, players, currentTurn) => {
+const getState = (state, currentTurn) => {
   if (state === 'CHECKMATE') {
     return currentTurn ? {type: 'error', message: 'You Lose!!!'} : {type: 'green', message: 'You Win!!!'}
   }
@@ -31,12 +31,18 @@ const getState = (state, players, currentTurn) => {
   return {}
 }
 
-const EndScreen = ({game, players, currentTurn}) => {
-  const state = game.state === 'END' ? getState(game.gameState, players, currentTurn) : {}
-  return <Modal open={game.state === 'END'}>
+const EndScreen = () => {
+  const {players, game} = useSelector((state) => state)
+  const {turn, state, gameState} = game
+  
+  const currentTurn = players.user && players.user.color.toLowerCase().startsWith(turn)
+  const currentState = state === 'END' ? getState(gameState, currentTurn) : {}
+  return <Modal open={state === 'END'}>
     <BoxContainer>
-      <Typography variant="h5" component="h2" textAlign={'center'}>{game.gameState}</Typography>
-      <Typography variant="h6" component="h2" color={state.type} textAlign={'center'}>{state.message}</Typography>
+      <Typography variant="h5" component="h2" textAlign={'center'}>{gameState}</Typography>
+      <Typography variant="h6" component="h2" color={currentState.type} textAlign={'center'}>
+        {currentState.message}
+      </Typography>
     </BoxContainer>
   </Modal>
 }
