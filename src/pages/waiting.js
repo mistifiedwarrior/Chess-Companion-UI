@@ -30,20 +30,23 @@ const Waiting = () => {
   const ws = useWebsocket()
   
   useEffect(() => {
+    if (game.state === 'STARTED') {
+      window.location.href = '/game'
+    }
     if (!game || !game.gameId && window) {
       window.location.href = '/'
     }
   }, [game])
   
   useEffect(() => {
+    if (!players.opponent) {
+      ws.send({event: STATUS})
+    }
     if (ws.data && ws.data.event) {
       if (ws.data.event === STATUS) {
         const {game: gameStatus, player1, player2} = ws.data.message
         dispatch(setGame(gameStatus, players.user.color))
         dispatch(setOpponent(player1.playerId === players.user.playerId ? player2 : player1))
-      }
-      if (ws.data.event === START) {
-        window.location.href = '/game'
       }
     }
   }, [ws.data])

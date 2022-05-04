@@ -15,7 +15,7 @@ const useWebSocket = (gameId, retryCount = 3, retryInterval = 1500) => {
   const url = `ws:${BFF_URL.split(':').slice(1).join(':')}/websockets`
   const token = getStorage(StorageKeys.AUTH)
   const [data, setData] = useState({})
-  const [send, setSend] = useState(() => () => ({}))
+  const [send, setSend] = useState(() => (text) => text)
   const [retry, setRetry] = useState(retryCount)
   const [readyState, setReadyState] = useState(false)
   

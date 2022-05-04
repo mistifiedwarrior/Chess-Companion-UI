@@ -1,4 +1,4 @@
-import {Box, Modal, Typography} from '@mui/material'
+import {Box, Button, Link, Modal, Stack, Typography} from '@mui/material'
 import {styled} from '@mui/styles'
 import {useSelector} from 'react-redux'
 
@@ -39,10 +39,13 @@ const EndScreen = () => {
   const currentState = state === 'END' ? getState(gameState, currentTurn) : {}
   return <Modal open={state === 'END'}>
     <BoxContainer>
-      <Typography variant="h5" component="h2" textAlign={'center'}>{gameState}</Typography>
-      <Typography variant="h6" component="h2" color={currentState.type} textAlign={'center'}>
-        {currentState.message}
-      </Typography>
+      <Stack spacing={2} alignItems={'center'}>
+        <Typography variant="h5" component="h2" textAlign={'center'}>{gameState}</Typography>
+        <Typography variant="h6" component="h2" color={currentState.type} textAlign={'center'}>
+          {currentState.message}
+        </Typography>
+        <Link href={'/'} underline={'none'}><Button variant={'contained'} href={'/'}>Play Again</Button></Link>
+      </Stack>
     </BoxContainer>
   </Modal>
 }

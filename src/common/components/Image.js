@@ -45,7 +45,7 @@ const state = {
   
 }
 
-const Image = ({src, alt, item, prev, ...rest}) => {
+const Image = ({src, alt, item, prev = {}, ...rest}) => {
   const media = useMedia()
   const {selected, possibleMoves} = item
   return <Stack direction={'row'} justifyContent={'center'} height={'inherit'} alignItems={'center'}>
