@@ -11,6 +11,9 @@ const games = (host = '') => ({
   },
   getPossibleMoves(position) {
     return axios.fetch(`${host}/possibles/${position}`)
+  },
+  getStatusBy(gameId) {
+    return axios.fetch(`${host}/status/${gameId}`)
   }
 })
 

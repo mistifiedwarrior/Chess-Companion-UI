@@ -11,7 +11,7 @@ const formatMessage = (data) => {
   }
 }
 
-const useWebSocket = (retryCount = 3, retryInterval = 1500) => {
+const useWebSocket = (gameId, retryCount = 3, retryInterval = 1500) => {
   const url = `ws:${BFF_URL.split(':').slice(1).join(':')}/websockets`
   const token = getStorage(StorageKeys.AUTH)
   const [data, setData] = useState({})
@@ -21,8 +21,8 @@ const useWebSocket = (retryCount = 3, retryInterval = 1500) => {
   
   // eslint-disable-next-line consistent-return
   useEffect(() => {
-    if (!readyState) {
-      const ws = window ? new WebSocket(`${url}?token=${token}`) : {}
+    if (!readyState && (gameId || token)) {
+      const ws = window ? new WebSocket(`${url}?token=${token}&gameId=${gameId}`) : {}
       ws.onopen = () => {
         setReadyState(true)
         setSend(() => (text) => ws.send(JSON.stringify(text)))
