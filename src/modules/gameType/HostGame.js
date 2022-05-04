@@ -46,7 +46,8 @@ const HostGame = ({changeType}) => {
       <SelectOption label="Select Player" options={playerOptions} value={values.player}
                     setValue={handleChange('player')}/>
       <TextField label="Name" variant="outlined" value={values.name} onChange={handleChange('name')} required/>
-      <SelectOption label="Select Color" options={colorOptions} value={values.color} setValue={handleChange('color')}/>
+      {values.player === 'FRIEND' && <SelectOption label="Select Color" options={colorOptions} value={values.color}
+                                                   setValue={handleChange('color')}/>}
       <LoadingButton loading={loading} variant={'contained'} type={'submit'}>Host Game</LoadingButton>
     </Stack>
   </form>
