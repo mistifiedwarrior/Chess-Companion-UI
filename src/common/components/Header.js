@@ -2,7 +2,7 @@ import React from 'react'
 import {useSelector} from 'react-redux'
 import {Stack, Typography} from '@mui/material'
 
-const HeadTag = ({viewer}) => {
+const HeadTag = ({viewer = false}) => {
   const {site, players} = useSelector((state) => state)
   return <Stack>
     <Stack direction={'row'} spacing={1} ml={2}>

@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react'
-import {Box, Divider, Stack, Typography} from '@mui/material'
+import {Divider, Stack, Typography} from '@mui/material'
 import {LOG} from '../../constants/eventNames'
 import {styled} from '@mui/styles'
 import useScroll from '../../hooks/useScroll'
@@ -19,9 +19,9 @@ const LogScreen = ({ws}) => {
   
   useEffect(() => {
     if (ws.data && ws.data.event && ws.data.event === LOG) {
-      setLogs(ws.data.message)
-      scroll()
+      setLogs(ws.data.message || {})
     }
+    setTimeout(scroll, 100)
   }, [ws.data])
   
   return <LogContainer border={2}>
@@ -29,7 +29,6 @@ const LogScreen = ({ws}) => {
     <Divider color={'#000'}/>
     <Stack overflow={'scroll'} p={1} spacing={0.5}>
       {logs.logs && logs.logs.map((log, index) => <Typography variant={'body2'} key={index}>{log}</Typography>)}
-      <Box p={2.2}/>
       <div id={'end'}/>
     </Stack>
   </LogContainer>

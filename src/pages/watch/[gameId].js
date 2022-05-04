@@ -3,18 +3,13 @@ import React, {useEffect} from 'react'
 import API from '../../API'
 import {setOpponent, setUser} from '../../modules/players/action'
 import {setGame} from '../../modules/game/action'
-import {Stack} from '@mui/material'
-import Header from '../../common/components/Header'
-import GameScreen from '../../modules/game/GameScreen'
 import {useRouter} from 'next/router'
-import {STATUS} from '../../constants/eventNames'
-import useWebsocket from '../../hooks/useWebsocket'
+import BroadCastGame from '../../modules/game/BroadCastGame'
 
 const WatchGame = () => {
   const {game, players} = useSelector((state) => state)
   const dispatch = useDispatch()
   const router = useRouter()
-  const ws = useWebsocket(router.query.gameId)
   
   useEffect(() => {
     if (router.query && router.query.gameId) {
@@ -28,23 +23,11 @@ const WatchGame = () => {
     }
   }, [router.query])
   
-  useEffect(() => {
-    if (ws.data && ws.data.event) {
-      if (ws.data.event === STATUS) {
-        const {game: gameStatus} = ws.data.message
-        dispatch(setGame(gameStatus, players.user && players.user.color))
-      }
-    }
-  }, [ws.data])
-  
   if (!game || !game.gameId) {
     return <></>
   }
   
-  return <Stack height={'100vh'} style={{pointerEvents: 'none'}}>
-    <Header viewer/>
-    <GameScreen ws={ws}/>
-  </Stack>
+  return <BroadCastGame/>
 }
 
 export default WatchGame
