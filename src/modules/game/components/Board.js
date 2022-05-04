@@ -10,10 +10,11 @@ import {MOVE} from '../../../constants/eventNames'
 import {setGame} from '../action'
 import API from '../../../API'
 import {isCurrentTurn, isMyPiece} from '../utils'
+import useMedia from '../../../hooks/useMedia'
 
-const BoxContainer = styled(Box)(({theme, isEven}) => ({
-  height: isWindow() && window.innerHeight < window.innerWidth ? '8vh' : '8vw',
-  width: isWindow() && window.innerHeight < window.innerWidth ? '8vh' : '8vw',
+const BoxContainer = styled(Box)(({theme, isEven, sm}) => ({
+  height: `${sm ? 10 : 8}v${isWindow() && window.innerHeight < window.innerWidth ? 'h' : 'w'}`,
+  width: `${sm ? 10 : 8}v${isWindow() && window.innerHeight < window.innerWidth ? 'h' : 'w'}`,
   background: isEven ? theme.palette.grey[300] : theme.palette.grey[500]
 }))
 
@@ -26,6 +27,7 @@ const Board = ({ws}) => {
   const {players, game} = useSelector((state) => state)
   const {board, turn, state} = game
   const dispatch = useDispatch()
+  const media = useMedia()
   
   useEffect(() => {
     if (ws.data && ws.data.event && ws.data.event === MOVE) {
@@ -57,7 +59,8 @@ const Board = ({ws}) => {
       board.map((row, rowNo) => <Stack key={rowNo} direction={'row'}>
         {row.map((item, colNo) => {
           const isClickable = isCurrentTurn(turn, item, players.user) || possibleMoves.some((move) => move.to === item.square)
-          return <BoxContainer key={`${rowNo}_${colNo}`} onClick={handleClick(item)} isEven={(rowNo + colNo) % 2 === 0}
+          return <BoxContainer sm={media.sm} key={`${rowNo}_${colNo}`} onClick={handleClick(item)}
+                               isEven={(rowNo + colNo) % 2 === 0}
                                sx={{
                                  pointerEvents: isClickable ? 'pointer' : 'none',
                                  cursor: isClickable ? 'pointer' : 'none'

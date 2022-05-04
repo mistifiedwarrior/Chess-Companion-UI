@@ -3,22 +3,23 @@ import {styled} from '@mui/styles'
 import {Box, Stack} from '@mui/material'
 import {isWindow} from '../../utils/utils'
 import {RemoveCircleOutline} from '@mui/icons-material'
+import useMedia from '../../hooks/useMedia'
 
-const ChessImage = styled('img')(({theme, state}) => {
+const ChessImage = styled('img')(({theme, state, sm}) => {
   if (!isWindow()) {
     return {}
   }
   const side = window.innerWidth < window.innerHeight ? 'w' : 'h'
   return {
-    height: `4v${side}`,
-    width: `4v${side}`,
+    height: `${sm ? 5.5 : 4}v${side}`,
+    width: `${sm ? 5.5 : 4}v${side}`,
     padding: state.color ? `1.4v${side}` : 0,
-    border: state.color ? `0.6v${side} solid ${theme.palette[state.color].main}` : 0
+    border: state.color ? `${sm ? 1 : 0.6}v${side} solid ${theme.palette[state.color].main}` : 0
   }
 })
 
-const Dot = styled(Box)(({color}) => ({
-  border: `${isWindow() && window.innerWidth < window.innerHeight ? '1.2vw' : '1.2vh'} solid ${color}`,
+const Dot = styled(Box)(({color, sm}) => ({
+  border: `${sm ? '1.5' : '1.2'}v${isWindow() && window.innerWidth < window.innerHeight ? 'w' : 'h'} solid ${color}`,
   borderRadius: '50%'
 }))
 
@@ -45,12 +46,14 @@ const state = {
 }
 
 const Image = ({src, alt, item, prev, ...rest}) => {
+  const media = useMedia()
   const {selected, possibleMoves} = item
   return <Stack direction={'row'} justifyContent={'center'} height={'inherit'} alignItems={'center'}>
-    {!src && possibleMoves.some((move) => move.to === item.square) && <Dot color={'green'}/>}
+    {!src && possibleMoves.some((move) => move.to === item.square) && <Dot sm={media.sm} color={'green'}/>}
     {!src && item.square === prev.from &&
       <RemoveCircleOutline fontSize={'large'} color={'error'} fontWeight={'bold'}/>}
-    {src && <ChessImage src={src} alt={alt} state={state.getState({selected, possibleMoves, prev}, item)} {...rest} />}
+    {src && <ChessImage sm={media.sm} src={src} alt={alt}
+                        state={state.getState({selected, possibleMoves, prev}, item)} {...rest} />}
   </Stack>
 }
 

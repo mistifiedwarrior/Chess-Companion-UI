@@ -3,12 +3,13 @@ import {Divider, Stack, Typography} from '@mui/material'
 import {LOG} from '../../constants/eventNames'
 import {styled} from '@mui/styles'
 import useScroll from '../../hooks/useScroll'
+import useMedia from '../../hooks/useMedia'
 
-const LogContainer = styled(Stack)(({theme}) => ({
-  width: theme.spacing(40),
+const LogContainer = styled(Stack)(({theme, sm}) => ({
+  width: sm ? '95%' : theme.spacing(40),
   position: 'relative',
-  top: '20vh',
-  height: '50vh',
+  top: sm ? '0' : '20vh',
+  height: sm ? 'calc(90vh - 120vw)' : '50vh',
   border: '1px solid #000'
 }))
 
@@ -16,6 +17,7 @@ const LogScreen = ({ws}) => {
   const [logs, setLogs] = useState({})
   
   const {scroll} = useScroll('#end')
+  const media = useMedia()
   
   useEffect(() => {
     if (ws.data && ws.data.event && ws.data.event === LOG) {
@@ -24,7 +26,7 @@ const LogScreen = ({ws}) => {
     setTimeout(scroll, 100)
   }, [ws.data])
   
-  return <LogContainer border={2}>
+  return <LogContainer border={2} sm={media.sm}>
     <Typography variant={'h5'} p={0.2} pl={1}>Logs (GameId: {logs.gameId})</Typography>
     <Divider color={'#000'}/>
     <Stack overflow={'scroll'} p={1} spacing={0.5}>
