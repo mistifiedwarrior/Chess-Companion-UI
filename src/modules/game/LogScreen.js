@@ -6,10 +6,10 @@ import useScroll from '../../hooks/useScroll'
 import useMedia from '../../hooks/useMedia'
 
 const LogContainer = styled(Stack)(({theme, sm}) => ({
-  width: sm ? '95%' : theme.spacing(40),
+  width: sm === 'true' ? '95%' : theme.spacing(40),
   position: 'relative',
-  top: sm ? '0' : '20vh',
-  height: sm ? 'calc(90vh - 120vw)' : '50vh',
+  top: sm === 'true' ? '0' : '20vh',
+  height: sm === 'true' ? 'calc(90vh - 120vw)' : '50vh',
   border: '1px solid #000'
 }))
 
@@ -26,7 +26,7 @@ const LogScreen = ({ws}) => {
     setTimeout(scroll, 100)
   }, [ws.data])
   
-  return <LogContainer border={2} sm={media.sm}>
+  return <LogContainer border={2} sm={media.sm.toString()}>
     <Typography variant={'h5'} p={0.2} pl={1}>Logs (GameId: {logs.gameId})</Typography>
     <Divider color={'#000'}/>
     <Stack overflow={'scroll'} p={1} spacing={0.5}>
