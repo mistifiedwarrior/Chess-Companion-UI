@@ -5,21 +5,21 @@ import {isWindow} from '../../utils/utils'
 import {RemoveCircleOutline} from '@mui/icons-material'
 import useMedia from '../../hooks/useMedia'
 
-const ChessImage = styled('img')(({theme, state, sm}) => {
+const ChessImage = styled('img')(({theme, state}) => {
   if (!isWindow()) {
     return {}
   }
   const side = window.innerWidth < window.innerHeight ? 'w' : 'h'
   return {
-    height: `${sm === 'true' ? 5.5 : 4}v${side}`,
-    width: `${sm === 'true' ? 5.5 : 4}v${side}`,
+    height: `4v${side}`,
+    width: `4v${side}`,
     padding: state.color ? `1.4v${side}` : 0,
-    border: state.color ? `${sm === 'true' ? 1 : 0.6}v${side} solid ${theme.palette[state.color].main}` : 0
+    border: state.color ? `0.6v${side} solid ${theme.palette[state.color].main}` : 0
   }
 })
 
-const Dot = styled(Box)(({color, sm}) => ({
-  border: `${sm === true ? '1.5' : '1.2'}v${isWindow() && window.innerWidth < window.innerHeight ? 'w' : 'h'} solid ${color}`,
+const Dot = styled(Box)(({color}) => ({
+  border: `1.2v${isWindow() && window.innerWidth < window.innerHeight ? 'w' : 'h'} solid ${color}`,
   borderRadius: '50%'
 }))
 

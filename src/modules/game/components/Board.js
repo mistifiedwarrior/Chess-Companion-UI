@@ -12,9 +12,9 @@ import API from '../../../API'
 import {isCurrentTurn, isMyPiece} from '../utils'
 import useMedia from '../../../hooks/useMedia'
 
-const BoxContainer = styled(Box)(({theme, isEven, sm}) => ({
-  height: `${sm ? 10 : 8}v${isWindow() && window.innerHeight < window.innerWidth ? 'h' : 'w'}`,
-  width: `${sm ? 10 : 8}v${isWindow() && window.innerHeight < window.innerWidth ? 'h' : 'w'}`,
+const BoxContainer = styled(Box)(({theme, isEven}) => ({
+  height: `8v${isWindow() && window.innerHeight < window.innerWidth ? 'h' : 'w'}`,
+  width: `8v${isWindow() && window.innerHeight < window.innerWidth ? 'h' : 'w'}`,
   background: isEven ? theme.palette.grey[300] : theme.palette.grey[500]
 }))
 

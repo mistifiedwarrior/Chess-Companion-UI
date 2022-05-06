@@ -25,6 +25,8 @@ const Container = styled('div')(({theme}) => ({
 // eslint-disable-next-line max-lines-per-function,max-statements
 const Waiting = () => {
   const {site, game, players} = useSelector((state) => state)
+  const [polling, setPolling] = useState(true)
+  const [count, setCount] = useState(0)
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
   const ws = useWebsocket()
@@ -39,14 +41,22 @@ const Waiting = () => {
   }, [game])
   
   useEffect(() => {
-    if (!players.opponent) {
-      ws.send({event: STATUS})
+    if (polling) {
+      setTimeout(() => {
+        ws.send({event: STATUS})
+        setCount(count + 1)
+      }, 5000)
     }
-    if (ws.data && ws.data.event) {
-      if (ws.data.event === STATUS) {
-        const {game: gameStatus, player1, player2} = ws.data.message
-        dispatch(setGame(gameStatus, players.user.color))
-        dispatch(setOpponent(player1.playerId === players.user.playerId ? player2 : player1))
+  }, [count])
+  
+  
+  useEffect(() => {
+    if (ws.data && ws.data.event && ws.data.event === STATUS) {
+      const {game: gameStatus, player1, player2} = ws.data.message
+      dispatch(setGame(gameStatus, players.user.color))
+      dispatch(setOpponent(player1.playerId === players.user.playerId ? player2 : player1))
+      if (player2) {
+        setPolling(false)
       }
     }
   }, [ws.data])

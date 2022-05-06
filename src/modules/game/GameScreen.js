@@ -5,7 +5,7 @@ import useMedia from '../../hooks/useMedia'
 
 const GameScreen = ({ws}) => {
   const media = useMedia()
-  return <Stack alignItems={'center'} height={'96vh'}
+  return <Stack alignItems={'center'} height={'92vh'}
                 justifyContent={media.sm ? 'space-evenly' : 'center'}
                 direction={media.sm ? 'column' : 'row'}
                 spacing={media.sm ? 2 : 8}>
