@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react'
-import theme from '../theme/theme'
+import theme from '../theme'
 import HeadTag from '../common/components/HeadTag'
 import Layout from '../common/components/Layout'
 import {Router} from 'next/router'

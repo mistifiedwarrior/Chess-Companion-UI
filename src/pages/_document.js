@@ -33,7 +33,15 @@ class MyDocument extends NextDocument {
     return (
       <Html>
         <Head/>
-        <body style={{margin: 0, padding: 0}}>
+        <body style={{
+          margin: 0,
+          padding: 0,
+          width: '100vw',
+          backgroundColor: '#fff',
+          fontSize: '16px',
+          overflowX: 'hidden',
+          fontFamily: 'Arial,Helvetica,sans-serif'
+        }}>
         <Main/>
         <NextScript/>
         </body>
