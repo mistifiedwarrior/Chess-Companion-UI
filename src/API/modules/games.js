@@ -14,6 +14,10 @@ const games = (host = '') => ({
   },
   getStatusBy(gameId) {
     return axios.fetch(`${host}/status/${gameId}`)
+  },
+  resetGame(values) {
+    const options = {method: METHODS.PUT, data: values}
+    return axios.fetch(`${host}/reset-game`, options)
   }
 })
 
