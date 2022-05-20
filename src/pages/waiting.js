@@ -6,7 +6,8 @@ import {LoadingButton} from '@mui/lab'
 import useWebsocket from '../hooks/useWebsocket'
 import {START, STATUS} from '../constants/eventNames'
 import {setGame} from '../modules/game/action'
-import {setOpponent} from '../modules/players/action'
+import {setOpponent, setUser} from '../modules/players/action'
+import API from '../API'
 
 const Container = styled('div')(({theme}) => ({
   display: 'flex',
@@ -25,38 +26,48 @@ const Container = styled('div')(({theme}) => ({
 // eslint-disable-next-line max-lines-per-function,max-statements
 const Waiting = () => {
   const {site, game, players} = useSelector((state) => state)
-  const [polling, setPolling] = useState(true)
   const [count, setCount] = useState(0)
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
   const ws = useWebsocket()
   
   useEffect(() => {
+    API.games.getStatus()
+      .then(({game: gameStatus, player1, player2, user}) => {
+        dispatch(setUser(user))
+        dispatch(setGame(gameStatus, players.user && players.user.color))
+        if (player2) {
+          dispatch(setOpponent(user.playerId === player1.playerId ? player2 : player1))
+        }
+      })
+      .catch(() => {
+        window.location.href = '/'
+      })
+  }, [])
+  
+  useEffect(() => {
     if (game.state === 'STARTED') {
       window.location.href = '/game'
-    }
-    if (!game || !game.gameId && window) {
-      window.location.href = '/'
     }
   }, [game])
   
   useEffect(() => {
-    if (polling) {
-      setTimeout(() => {
-        ws.send({event: STATUS})
-        setCount(count + 1)
-      }, 5000)
-    }
+    setTimeout(() => {
+      ws.send({event: STATUS})
+      setCount(count + 1)
+    }, 2000)
   }, [count])
   
   
   useEffect(() => {
+    if (ws.data && ws.data.event && ws.data.event === START) {
+      window.location.href = '/game'
+    }
     if (ws.data && ws.data.event && ws.data.event === STATUS) {
       const {game: gameStatus, player1, player2} = ws.data.message
       dispatch(setGame(gameStatus, players.user.color))
-      dispatch(setOpponent(player1.playerId === players.user.playerId ? player2 : player1))
       if (player2) {
-        setPolling(false)
+        dispatch(setOpponent(player1.playerId === players.user.playerId ? player2 : player1))
       }
     }
   }, [ws.data])
