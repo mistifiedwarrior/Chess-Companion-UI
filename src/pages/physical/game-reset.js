@@ -42,7 +42,7 @@ const ResetGame = () => {
                      required/>
           <TextField label="Password" variant="outlined" value={values.password} onChange={handleChange('password')}
                      type={'password'} required/>
-          <LoadingButton loading={loading} variant={'contained'} type={'submit'}>Host Game</LoadingButton>
+          <LoadingButton loading={loading} variant={'contained'} type={'submit'}>Reset Game</LoadingButton>
           <Typography variant={'body1'}>{message}</Typography>
         </Stack>
       </form>
