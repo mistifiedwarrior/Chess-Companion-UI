@@ -8,8 +8,8 @@ import useMedia from '../../hooks/useMedia'
 const LogContainer = styled(Stack)(({theme, sm}) => ({
   width: sm === 'true' ? '95%' : theme.spacing(40),
   position: 'relative',
-  top: sm === 'true' ? '0' : '20vh',
-  height: sm === 'true' ? 'calc(90vh - 120vw)' : '50vh',
+  top: 0,
+  height: sm === 'true' ? 'calc(90vh - 120vw)' : '42vh',
   border: '1px solid #000'
 }))
 
