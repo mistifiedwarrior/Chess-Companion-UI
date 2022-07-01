@@ -2,7 +2,7 @@ import React, {useEffect} from 'react'
 import {Stack} from '@mui/material'
 import {useDispatch, useSelector} from 'react-redux'
 import useWebsocket from '../hooks/useWebsocket'
-import {LOG, STATUS} from '../constants/eventNames'
+import {CHAT, LOG, STATUS} from '../constants/eventNames'
 import {setGame} from '../modules/game/action'
 import {setOpponent, setUser} from '../modules/players/action'
 import Header from '../common/components/Header'
@@ -22,6 +22,7 @@ const Game = () => {
         dispatch(setGame(gameStatus, players.user && players.user.color))
         dispatch(setOpponent(user.playerId === player1.playerId ? player2 : player1))
         ws.send({event: LOG})
+        ws.send({event: CHAT})
         ws.send({event: STATUS})
       })
   }, [ws.send])

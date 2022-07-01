@@ -41,8 +41,10 @@ const ChatScreen = ({ws}) => {
   
   const handleSubmit = (event) => {
     event.preventDefault()
-    ws.send({event: CHAT, message})
-    setMessage('')
+    if (message.trim()) {
+      ws.send({event: CHAT, message: message.trim()})
+      setMessage('')
+    }
   }
   
   return <ChatContainer border={2} sm={media.sm.toString()} justifyContent={'space-between'}>
