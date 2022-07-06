@@ -1,8 +1,6 @@
-const UNDEFINED = 'undefined'
+import {StorageKeys} from '../constants/storage'
 
-const StorageKeys = {
-  AUTH: 'auth'
-}
+const UNDEFINED = 'undefined'
 
 const storageLocation = () => 'localStorage'
 
@@ -27,20 +25,7 @@ const getStorage = (key) => {
   }
 }
 
-const clearStorage = () => {
-  if (typeof window === UNDEFINED) {
-    return
-  }
-  window[storageLocation()].clear()
-}
-
-const removeFromStorage = (key) => {
-  if (typeof window === UNDEFINED) {
-    return
-  }
-  window[storageLocation()].removeItem(key)
-}
-
 const handleLogin = (token) => setStorage(StorageKeys.AUTH, token)
+const handleTournamentLogin = (token) => setStorage(StorageKeys.TOURNAMENT_AUTH, token)
 
-export {handleLogin, setStorage, getStorage, clearStorage, removeFromStorage}
+export {handleLogin, setStorage, getStorage, handleTournamentLogin}

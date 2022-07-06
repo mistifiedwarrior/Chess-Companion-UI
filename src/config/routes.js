@@ -1,7 +1,7 @@
 const ROUTES = {
-  LOGIN: '/login',
+  LOGIN: '/tournament',
   HOME: {USER: '/', ADMIN: '/admin', OWNER: '/owner'},
-  OAUTH: '/login/oauth'
+  OAUTH: '/tournament/oauth'
 }
 
 export {ROUTES}

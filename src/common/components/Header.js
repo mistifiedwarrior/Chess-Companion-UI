@@ -3,7 +3,7 @@ import {useSelector} from 'react-redux'
 import {Stack, Typography} from '@mui/material'
 import useMedia from '../../hooks/useMedia'
 
-const HeadTag = ({viewer = false}) => {
+const Header = ({viewer = false}) => {
   const {site, players} = useSelector((state) => state)
   const media = useMedia()
   return <Stack>
@@ -15,4 +15,4 @@ const HeadTag = ({viewer = false}) => {
   </Stack>
 }
 
-export default HeadTag
+export default Header

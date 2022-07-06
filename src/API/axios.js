@@ -4,7 +4,8 @@ import {StorageKeys} from '../constants/storage'
 
 export const initHeaders = () => ({
   'Content-Type': 'application/json',
-  authorization: getStorage(StorageKeys.AUTH) || ''
+  authorization: getStorage(StorageKeys.AUTH) || '',
+  tournamentAuth: getStorage(StorageKeys.TOURNAMENT_AUTH) || ''
 })
 
 const utils = {
